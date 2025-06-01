@@ -113,7 +113,6 @@ function layoutTimeEntries(entries: TimeEntry[]): LayoutEntry[] {
 function App() {
   const [cpuUsage, setCpuUsage] = useState<number>(0);
   const [memoryUsage, setMemoryUsage] = useState<number>(0);
-  const [activeProcesses, setActiveProcesses] = useState<ProcessInfo[]>([]);
   const [timeEntries, setTimeEntries] = useState<TimeEntry[]>([]);
   const timelineContainerRef = useRef<HTMLDivElement>(null);
 
@@ -159,7 +158,7 @@ function App() {
   useEffect(() => {
     const fetchSystemInfo = async () => {
       try {
-        const [cpu, memory, processes, entries] = await Promise.all([
+        const [cpu, memory, _, entries] = await Promise.all([
           invoke<number>("get_cpu_usage"),
           invoke<number>("get_memory_usage"),
           invoke<ProcessInfo[]>("get_active_processes"),
@@ -167,7 +166,6 @@ function App() {
         ]);
         setCpuUsage(cpu);
         setMemoryUsage(memory);
-        setActiveProcesses(processes);
         setTimeEntries(entries);
       } catch (error) {
         console.error("Failed to fetch system info:", error);
@@ -307,7 +305,7 @@ function App() {
     const productivityKeywords = [
       'notes', 'word', 'excel', 'powerpoint', 'docs', 'sheets', 'slides', 'onenote', 'notion',
       'obsidian', 'bear', 'evernote', 'simplenote', 'apple notes', 'pages', 'numbers', 'keynote',
-      'todoist', 'things', 'ticktick', 'goodnotes', 'pdf expert', 'preview'
+      'todoist', 'things', 'ticktick', 'goodnotes', 'pdf expert', 'preview', 'sagemode'
     ];
 
     const matches = (keywords: string[]) => keywords.some(keyword => lowerName.includes(keyword));
@@ -418,7 +416,7 @@ function App() {
                     // label={({ name }) => name.length > 10 ? name.slice(0, 10) + '…' : name}
                     isAnimationActive={false}
                   >
-                    {getAggregatedAppUsage(timeEntries).map((entry, idx) => (
+                    {getAggregatedAppUsage(timeEntries).map((_, idx) => (
                       <Cell key={`cell-${idx}`} fill={COLORS[idx % COLORS.length]} />
                     ))}
                   </Pie>

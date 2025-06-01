@@ -5,10 +5,8 @@ use std::time::{Duration, Instant, SystemTime, UNIX_EPOCH};
 use std::collections::HashMap;
 use serde::Serialize;
 use std::thread;
-use core_graphics::display::{CGDisplay, CGMainDisplayID};
 use objc::{class, msg_send, sel, sel_impl};
-use objc::runtime::{Object, Sel};
-use block::Block;
+use objc::runtime::Object;
 
 #[derive(Serialize, Clone)]
 struct ProcessInfo {

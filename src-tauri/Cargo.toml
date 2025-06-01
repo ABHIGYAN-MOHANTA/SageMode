@@ -1,8 +1,8 @@
 [package]
-name = "sagemode"
+name = "SageMode"
 version = "0.1.0"
-description = "A Tauri App"
-authors = ["you"]
+description = "SageMode is a beautifully minimal macOS app that helps you visualize your daily app usage and focus patterns with precision. Track where your time goes, see which apps demand your attention, and uncover insights to boost productivity—all in a clean, dark-themed interface inspired by tools like Rize. Whether you're coding, exploring, or attending meetings, SageMode brings mindful awareness to your digital habits."
+authors = ["Abhigyan Mohanta"]
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
