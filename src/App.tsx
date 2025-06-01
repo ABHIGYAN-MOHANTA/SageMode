@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import "./App.css";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
@@ -110,6 +110,7 @@ function App() {
   const [memoryUsage, setMemoryUsage] = useState<number>(0);
   const [activeProcesses, setActiveProcesses] = useState<ProcessInfo[]>([]);
   const [timeEntries, setTimeEntries] = useState<TimeEntry[]>([]);
+  const timelineContainerRef = useRef<HTMLDivElement>(null);
 
   const MIN_ENTRY_HEIGHT = 30; // Increased minimum height
   const HOUR_HEIGHT = 80; // Increased hour height for better visibility
@@ -151,6 +152,20 @@ function App() {
     const interval = setInterval(fetchSystemInfo, 1000);
     fetchSystemInfo(); // Initial fetch
 
+    return () => clearInterval(interval);
+  }, []);
+
+  // Scroll to current time on mount and every 30 seconds
+  useEffect(() => {
+    const scrollToNow = () => {
+      if (timelineContainerRef.current) {
+        const now = Math.floor(Date.now() / 1000);
+        const top = getTimePosition(now);
+        timelineContainerRef.current.scrollTop = Math.max(top - timelineContainerRef.current.clientHeight / 2, 0);
+      }
+    };
+    scrollToNow(); // On mount
+    const interval = setInterval(scrollToNow, 30000); // Every 30 seconds
     return () => clearInterval(interval);
   }, []);
 
@@ -311,7 +326,7 @@ function App() {
 
         <div className="calendar-view">
           <h2>Daily Activity</h2>
-          <div className="timeline-container">
+          <div className="timeline-container" ref={timelineContainerRef}>
             <div className="timeline" style={{ height: getTimelineHeight(), position: 'relative' }}>
               {generateHourMarkers()}
               {layoutEntries.map((entry, index) => {
