@@ -1,11 +1,8 @@
 import { useState, useEffect } from "react";
-import reactLogo from "./assets/react.svg";
 import { invoke } from "@tauri-apps/api/core";
 import "./App.css";
 
 function App() {
-  const [greetMsg, setGreetMsg] = useState("");
-  const [name, setName] = useState("");
   const [cpuUsage, setCpuUsage] = useState<number>(0);
   const [memoryUsage, setMemoryUsage] = useState<number>(0);
 
@@ -30,61 +27,33 @@ function App() {
     return () => clearInterval(interval);
   }, []);
 
-  async function greet() {
-    // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
-    setGreetMsg(await invoke("greet", { name }));
-  }
-
   return (
     <main className="container">
-      <h1>SageMode</h1>
-
-      <div className="row">
-        <div className="system-metrics">
-          <div className="metric">
-            <div className="cpu-header">
-              <h2>CPU Usage</h2>
-              <p>{cpuUsage.toFixed(1)}%</p>
-            </div>
-            <div className="cpu-bar">
+      <div className="tab-bar">
+        <h1 className="tab-bar-title">SageMode</h1>
+        <div className="tab-bar-metrics">
+          <div className="tab-metric">
+            <span>CPU</span>
+            <div className="tab-bar-progress">
               <div 
-                className="cpu-bar-fill" 
+                className="tab-bar-progress-fill" 
                 style={{ width: `${cpuUsage}%` }}
               />
             </div>
+            <span>{cpuUsage.toFixed(1)}%</span>
           </div>
-
-          <div className="metric">
-            <div className="cpu-header">
-              <h2>Memory Usage</h2>
-              <p>{memoryUsage.toFixed(1)}%</p>
-            </div>
-            <div className="cpu-bar">
+          <div className="tab-metric">
+            <span>Memory</span>
+            <div className="tab-bar-progress">
               <div 
-                className="cpu-bar-fill" 
+                className="tab-bar-progress-fill" 
                 style={{ width: `${memoryUsage}%` }}
               />
             </div>
+            <span>{memoryUsage.toFixed(1)}%</span>
           </div>
         </div>
       </div>
-      <p>Click on the Tauri, Vite, and React logos to learn more.</p>
-
-      <form
-        className="row"
-        onSubmit={(e) => {
-          e.preventDefault();
-          greet();
-        }}
-      >
-        <input
-          id="greet-input"
-          onChange={(e) => setName(e.currentTarget.value)}
-          placeholder="Enter a name..."
-        />
-        <button type="submit">Greet</button>
-      </form>
-      <p>{greetMsg}</p>
     </main>
   );
 }

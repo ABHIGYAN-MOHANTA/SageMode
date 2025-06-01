@@ -23,11 +23,10 @@
 
 .container {
   margin: 0;
-  padding-top: 10vh;
+  padding: 0;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  text-align: center;
+  min-height: 100vh;
 }
 
 .logo {
@@ -115,20 +114,82 @@ button {
   }
 }
 
+.tab-bar {
+  backdrop-filter: blur(10px);
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.tab-bar-title {
+  margin: 0;
+  font-size: 1.5rem;
+  color: #fff;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.tab-bar-metrics {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+  flex: 1;
+}
+
+.tab-metric {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 200px;
+}
+
+.tab-metric span {
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 500;
+  min-width: 45px;
+}
+
+.tab-metric span:last-child {
+  text-align: right;
+}
+
+.tab-bar-progress {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.1);
+  height: 6px;
+  border-radius: 3px;
+  overflow: hidden;
+  min-width: 100px;
+}
+
+.tab-bar-progress-fill {
+  background: linear-gradient(to right, #4a3d84, #665693);
+  height: 100%;
+  transition: width 0.3s ease;
+}
+
+.metrics-container {
+  padding: 1rem;
+}
+
 .system-metrics {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: 1rem;
   width: 100%;
-  max-width: 400px;
+  max-width: 800px;
+  justify-content: center;
+  margin: 0 auto;
 }
 
 .metric {
-  padding: 1rem;
+  flex: 1;
+  min-width: 300px;
+  padding: 0.75rem;
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .cpu-header {
@@ -140,21 +201,24 @@ button {
 
 .cpu-header h2 {
   margin: 0;
-  font-size: 1.2rem;
+  font-size: 0.9rem;
   color: #fff;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .cpu-header p {
   margin: 0;
-  font-size: 1.1rem;
+  font-size: 0.9rem;
   color: #fff;
   font-weight: 500;
 }
 
 .cpu-bar {
   background: #2a2a2a;
-  height: 20px;
-  border-radius: 10px;
+  height: 16px;
+  border-radius: 8px;
   overflow: hidden;
 }
 

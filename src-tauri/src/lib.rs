@@ -1,5 +1,5 @@
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
-use sysinfo::{System, Cpu};
+use sysinfo::{System};
 use std::sync::Mutex;
 use std::time::Duration;
 use std::thread;
