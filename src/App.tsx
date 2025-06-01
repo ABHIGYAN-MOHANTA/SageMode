@@ -15,6 +15,11 @@ interface AppUsage {
   totalDuration: number;
 }
 
+interface CategoryUsage {
+  category: string;
+  totalDuration: number;
+}
+
 interface TimeEntry {
   app_name: string;
   start_time: number;
@@ -124,6 +129,27 @@ function App() {
         <div style={{ background: '#222', color: '#fff', padding: 8, borderRadius: 6, border: 'none' }}>
           <div><strong>{entry.name}</strong></div>
           <div>Time Spent: {formatDuration(entry.totalDuration)}</div>
+        </div>
+      );
+    }
+    return null;
+  };
+
+  // Custom tooltip for category pie chart
+  const CategoryPieTooltip = ({ active, payload }: any) => {
+    if (active && payload && payload.length) {
+      const entry = payload[0].payload;
+      return (
+        <div style={{ background: '#222', color: '#fff', padding: 8, borderRadius: 6, border: 'none' }}>
+          <div><strong>{entry.category}</strong></div>
+          <div>Time Spent: {formatDuration(entry.totalDuration)}</div>
+          <div style={{ fontSize: '0.8em', color: '#aaa', marginTop: '4px' }}>
+            {entry.category === 'Code' && 'Development and coding activities'}
+            {entry.category === 'Meetings' && 'Communication and collaboration'}
+            {entry.category === 'Explore' && 'Web browsing and research'}
+            {entry.category === 'Productivity' && 'Document and content creation'}
+            {entry.category === 'Other' && 'Miscellaneous applications'}
+          </div>
         </div>
       );
     }
@@ -249,6 +275,45 @@ function App() {
       .sort((a, b) => b.totalDuration - a.totalDuration);
   };
 
+  // Add category colors
+  const CATEGORY_COLORS = {
+    'Productivity': '#4a3d84',
+    'Code': '#24c8db',
+    'Meetings': '#665693',
+    'Explore': '#ffffff',
+    'Other': '#888888'
+  };
+
+  // Function to categorize apps
+  const categorizeApp = (appName: string): string => {
+    const lowerName = appName.toLowerCase();
+    if (lowerName.includes('code') || lowerName.includes('studio') || lowerName.includes('terminal') || lowerName.includes('git')) {
+      return 'Code';
+    } else if (lowerName.includes('meet') || lowerName.includes('zoom') || lowerName.includes('teams') || lowerName.includes('slack')) {
+      return 'Meetings';
+    } else if (lowerName.includes('chrome') || lowerName.includes('safari') || lowerName.includes('firefox') || lowerName.includes('brave')) {
+      return 'Explore';
+    } else if (lowerName.includes('notes') || lowerName.includes('word') || lowerName.includes('excel') || lowerName.includes('powerpoint') || lowerName.includes('docs') || lowerName.includes('sheets')) {
+      return 'Productivity';
+    }
+    return 'Other';
+  };
+
+  const getCategoryUsage = (entries: TimeEntry[]): CategoryUsage[] => {
+    const usageMap = new Map<string, number>();
+    
+    entries.forEach(entry => {
+      const duration = entry.end_time - entry.start_time;
+      const category = categorizeApp(entry.app_name);
+      const currentTotal = usageMap.get(category) || 0;
+      usageMap.set(category, currentTotal + duration);
+    });
+
+    return Array.from(usageMap.entries())
+      .map(([category, totalDuration]) => ({ category, totalDuration }))
+      .sort((a, b) => b.totalDuration - a.totalDuration);
+  };
+
   // Layout the time entries to avoid overlap
   const layoutEntries = layoutTimeEntries(timeEntries);
 
@@ -298,29 +363,61 @@ function App() {
               </div>
             ))}
           </div>
-          {/* Pie Chart for App Usage Distribution */}
-          <div style={{ width: '100%', height: 200 }}>
-            <ResponsiveContainer>
-              <PieChart>
-                <Pie
-                  data={getAggregatedAppUsage(timeEntries)}
-                  dataKey="totalDuration"
-                  nameKey="name"
-                  cx="50%"
-                  cy="50%"
-                  outerRadius={70}
-                  fill="#8884d8"
-                  label={({ name }) => name.length > 10 ? name.slice(0, 10) + '…' : name}
-                >
-                  {getAggregatedAppUsage(timeEntries).map((entry, idx) => (
-                    <Cell key={`cell-${idx}`} fill={COLORS[idx % COLORS.length]} />
-                  ))}
-                </Pie>
-                <Tooltip
-                  content={PieTooltip}
-                />
-              </PieChart>
-            </ResponsiveContainer>
+          <h2 style={{ marginTop: '1rem' }}>Usage Distribution</h2>
+          {/* Pie Charts Container */}
+          <div className="pie-charts-container">
+            {/* App Usage Pie Chart */}
+            <div className="pie-chart-wrapper">
+              <ResponsiveContainer>
+                <PieChart>
+                  <Pie
+                    data={getAggregatedAppUsage(timeEntries)}
+                    dataKey="totalDuration"
+                    nameKey="name"
+                    cx="50%"
+                    cy="50%"
+                    outerRadius={70}
+                    fill="#8884d8"
+                    // label={({ name }) => name.length > 10 ? name.slice(0, 10) + '…' : name}
+                    isAnimationActive={false}
+                  >
+                    {getAggregatedAppUsage(timeEntries).map((entry, idx) => (
+                      <Cell key={`cell-${idx}`} fill={COLORS[idx % COLORS.length]} />
+                    ))}
+                  </Pie>
+                  <Tooltip 
+                    content={PieTooltip}
+                    wrapperStyle={{ outline: 'none' }}
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+            {/* Category Usage Pie Chart */}
+            <div className="pie-chart-wrapper">
+              <ResponsiveContainer>
+                <PieChart>
+                  <Pie
+                    data={getCategoryUsage(timeEntries)}
+                    dataKey="totalDuration"
+                    nameKey="category"
+                    cx="50%"
+                    cy="50%"
+                    outerRadius={70}
+                    fill="#8884d8"
+                    // label={({ category }) => category}
+                    isAnimationActive={false}
+                  >
+                    {getCategoryUsage(timeEntries).map((entry) => (
+                      <Cell key={`cell-${entry.category}`} fill={CATEGORY_COLORS[entry.category as keyof typeof CATEGORY_COLORS]} />
+                    ))}
+                  </Pie>
+                  <Tooltip 
+                    content={CategoryPieTooltip}
+                    wrapperStyle={{ outline: 'none' }}
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
           </div>
         </div>
 

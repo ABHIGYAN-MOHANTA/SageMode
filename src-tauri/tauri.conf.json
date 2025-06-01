@@ -14,7 +14,13 @@
       {
         "title": "SageMode",
         "width": 1080,
-        "height": 720
+        "height": 720,
+        "resizable": false,
+        "center": true,
+        "minWidth": 1080,
+        "minHeight": 720,
+        "maxWidth": 1080,
+        "maxHeight": 720
       }
     ],
     "security": {

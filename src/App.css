@@ -258,7 +258,7 @@ button {
   flex: 1;
   min-width: 300px;
   max-width: 400px;
-  height: 720px;
+  height: 600px;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -277,6 +277,17 @@ button {
   grid-template-columns: 1fr;
   gap: 1rem;
   overflow-y: auto;
+  margin-bottom: 1rem;
+}
+
+.pie-charts-container {
+  display: flex;
+  height: 200px;
+}
+
+.pie-chart-wrapper {
+  flex: 1;
+  min-width: 0; /* This prevents flex items from overflowing */
 }
 
 .process-card {
