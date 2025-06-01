@@ -281,8 +281,6 @@ function App() {
     'Other': '#636e72'         // Desaturated Gray
   };
 
-
-
   // Function to categorize apps
   const categorizeApp = (appName: string): string => {
     const lowerName = appName.toLowerCase();
@@ -317,7 +315,6 @@ function App() {
     return 'Other';
   };
 
-
   const getCategoryUsage = (entries: TimeEntry[]): CategoryUsage[] => {
     const usageMap = new Map<string, number>();
     
@@ -333,8 +330,8 @@ function App() {
       .sort((a, b) => b.totalDuration - a.totalDuration);
   };
 
-  // Layout the time entries to avoid overlap
-  const layoutEntries = layoutTimeEntries(timeEntries);
+  // Layout the time entries to avoid overlap - only filter SageMode from timeline
+  const layoutEntries = layoutTimeEntries(timeEntries.filter(entry => entry.app_name.toLowerCase() !== 'sagemode'));
 
   // Add color palette for pie chart
   const COLORS = [
@@ -355,7 +352,6 @@ function App() {
     '#5E548E', // Twilight Purple
     '#9381FF'  // Gentle Indigo Accent
   ];
-
 
   return (
     <main className="container">
