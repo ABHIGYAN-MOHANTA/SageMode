@@ -19,6 +19,25 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
+
+  /* Hide scrollbar globally while maintaining scroll functionality */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+:root::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for all elements */
+* {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+*::-webkit-scrollbar {
+  display: none; /* Chrome, Safari and Opera */
 }
 
 .container {
@@ -233,4 +252,222 @@ button {
   text-align: center;
   font-size: 1.1rem;
   color: #fff;
+}
+
+.process-list {
+  flex: 1;
+  min-width: 300px;
+  max-width: 400px;
+  height: 720px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.process-list h2 {
+  color: #fff;
+  font-size: 1.2rem;
+  font-weight: 500;
+  margin: 0 0 1rem 0;
+  flex-shrink: 0;
+}
+
+.process-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  height: 400px;
+  overflow-y: auto;
+}
+
+.process-card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border-radius: 8px;
+  padding: 1rem;
+  border: 1px solid var(--border-color);
+  transition: all 0.3s ease;
+}
+
+.process-card.active {
+  border-color: var(--accent-color);
+  box-shadow: 0 0 10px rgba(var(--accent-color-rgb), 0.2);
+  background-color: rgba(var(--accent-color-rgb), 0.05);
+}
+
+.process-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.process-name {
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+}
+
+.process-duration {
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 500;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.process-metrics {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.process-metric {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.process-metric span {
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 500;
+  min-width: 45px;
+}
+
+.process-metric span:last-child {
+  text-align: right;
+}
+
+.process-bar {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.1);
+  height: 6px;
+  border-radius: 3px;
+  overflow: hidden;
+  min-width: 100px;
+}
+
+.process-bar-fill {
+  background: linear-gradient(to right, #4a3d84, #665693);
+  height: 100%;
+  transition: width 0.3s ease;
+}
+
+.active-badge {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 2px 6px;
+  font-size: 0.7em;
+  font-weight: 600;
+  color: white;
+  background-color: var(--accent-color);
+  border-radius: 4px;
+  text-transform: uppercase;
+}
+
+.main-content {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem;
+  height: calc(100vh - 80px); /* Adjust based on tab-bar height */
+}
+
+.calendar-view {
+  flex: 1;
+  min-width: 300px;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border-radius: 8px;
+  padding: 1rem;
+  border: 1px solid var(--border-color);
+}
+
+.calendar-view h2 {
+  color: #fff;
+  font-size: 1.2rem;
+  font-weight: 500;
+  margin: 0 0 1rem 0;
+}
+
+.timeline-container {
+  height: calc(100% - 3rem);
+  overflow-y: auto;
+  position: relative;
+}
+
+.timeline {
+  position: relative;
+  height: 1440px; /* 24 hours * 60px per hour */
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+  margin-left: 60px;
+}
+
+.hour-marker {
+  position: absolute;
+  left: -60px;
+  width: 50px;
+  text-align: right;
+  padding-right: 10px;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.8rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.hour-marker::after {
+  content: '';
+  position: absolute;
+  right: -1px;
+  top: 50%;
+  width: 10px;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.time-entry {
+  position: absolute;
+  left: 0;
+  right: 0;
+  background: rgba(var(--accent-color-rgb), 0.2);
+  border-left: 3px solid var(--accent-color);
+  border-radius: 4px;
+  padding: 4px 8px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.time-entry:hover {
+  background: rgba(var(--accent-color-rgb), 0.3);
+  z-index: 1;
+}
+
+.time-entry-label {
+  color: #fff;
+  font-size: 0.8rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+}
+
+/* Customize scrollbar for the timeline */
+.timeline-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.timeline-container::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+}
+
+.timeline-container::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+}
+
+.timeline-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
 }
