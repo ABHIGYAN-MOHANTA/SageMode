@@ -275,29 +275,50 @@ function App() {
       .sort((a, b) => b.totalDuration - a.totalDuration);
   };
 
-  // Add category colors
   const CATEGORY_COLORS = {
-    'Productivity': '#4a3d84',
-    'Code': '#24c8db',
-    'Meetings': '#665693',
-    'Explore': '#ffffff',
-    'Other': '#888888'
+    'Productivity': '#A29BFE', // Soft Lavender
+    'Code': '#6C5CE7',         // Rich Indigo
+    'Meetings': '#B388EB',     // Light Purple
+    'Explore': '#D3CCE3',      // Muted Gray-Lavender (low contrast)
+    'Other': '#636e72'         // Desaturated Gray
   };
+
+
 
   // Function to categorize apps
   const categorizeApp = (appName: string): string => {
     const lowerName = appName.toLowerCase();
-    if (lowerName.includes('code') || lowerName.includes('studio') || lowerName.includes('terminal') || lowerName.includes('git')) {
-      return 'Code';
-    } else if (lowerName.includes('meet') || lowerName.includes('zoom') || lowerName.includes('teams') || lowerName.includes('slack')) {
-      return 'Meetings';
-    } else if (lowerName.includes('chrome') || lowerName.includes('safari') || lowerName.includes('firefox') || lowerName.includes('brave')) {
-      return 'Explore';
-    } else if (lowerName.includes('notes') || lowerName.includes('word') || lowerName.includes('excel') || lowerName.includes('powerpoint') || lowerName.includes('docs') || lowerName.includes('sheets')) {
-      return 'Productivity';
-    }
+
+    const codeKeywords = [
+      'code', 'studio', 'terminal', 'git', 'xcode', 'sublime', 'atom', 'vim', 'emacs', 'neovim',
+      'intellij', 'webstorm', 'pycharm', 'clion', 'goland', 'rider', 'rubymine', 'datagrip', 'appcode',
+      'android studio', 'cursor', 'nova', 'bbedit', 'brackets', 'eclipse', 'netbeans'
+    ];
+
+    const meetingKeywords = [
+      'meet', 'zoom', 'teams', 'slack', 'skype', 'webex', 'bluejeans', 'discord', 'google meet',
+      'facetime', 'gotomeeting', 'whereby', 'ringcentral', 'zoho meeting'
+    ];
+
+    const exploreKeywords = [
+      'chrome', 'safari', 'firefox', 'brave', 'arc', 'opera', 'vivaldi', 'edge', 'duckduckgo'
+    ];
+
+    const productivityKeywords = [
+      'notes', 'word', 'excel', 'powerpoint', 'docs', 'sheets', 'slides', 'onenote', 'notion',
+      'obsidian', 'bear', 'evernote', 'simplenote', 'apple notes', 'pages', 'numbers', 'keynote',
+      'todoist', 'things', 'ticktick', 'goodnotes', 'pdf expert', 'preview'
+    ];
+
+    const matches = (keywords: string[]) => keywords.some(keyword => lowerName.includes(keyword));
+
+    if (matches(codeKeywords)) return 'Code';
+    if (matches(meetingKeywords)) return 'Meetings';
+    if (matches(exploreKeywords)) return 'Explore';
+    if (matches(productivityKeywords)) return 'Productivity';
     return 'Other';
   };
+
 
   const getCategoryUsage = (entries: TimeEntry[]): CategoryUsage[] => {
     const usageMap = new Map<string, number>();
@@ -319,8 +340,24 @@ function App() {
 
   // Add color palette for pie chart
   const COLORS = [
-    '#4a3d84', '#665693', '#24c8db', '#61dafb', '#747bff', '#8884d8', '#82ca9d', '#ffc658', '#ff8042', '#a4de6c', '#d0ed57', '#8dd1e1', '#d88884', '#a28fd0', '#f6c85f', '#6f4e7c'
+    '#6C5CE7', // Deep Indigo (Code)
+    '#A29BFE', // Light Lavender (Productivity)
+    '#B388EB', // Muted Purple (Meetings)
+    '#9C89B8', // Warm Lilac
+    '#8E8DFF', // Blue-Lavender
+    '#7E75F9', // Electric Violet
+    '#7D5FFF', // Soft Vivid Indigo
+    '#6D6875', // Desaturated Plum
+    '#B5838D', // Dusty Rose
+    '#FFCDB2', // Warm Peach
+    '#A28FD0', // Pale Purple (used in Rize)
+    '#C3B1E1', // Light Orchid
+    '#A3A1FB', // Periwinkle Blue
+    '#BFA2DB', // Subtle Purple Gray
+    '#5E548E', // Twilight Purple
+    '#9381FF'  // Gentle Indigo Accent
   ];
+
 
   return (
     <main className="container">
