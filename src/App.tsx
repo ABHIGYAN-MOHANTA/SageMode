@@ -259,10 +259,23 @@ function App() {
     return markers;
   };
 
+  // Helper function to filter entries for today
+  const getTodayEntries = (entries: TimeEntry[]): TimeEntry[] => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const todayStart = Math.floor(today.getTime() / 1000);
+    const tomorrowStart = todayStart + 24 * 60 * 60;
+
+    return entries.filter(entry => 
+      entry.start_time >= todayStart && entry.start_time < tomorrowStart
+    );
+  };
+
   const getAggregatedAppUsage = (entries: TimeEntry[]): AppUsage[] => {
+    const todayEntries = getTodayEntries(entries);
     const usageMap = new Map<string, number>();
     
-    entries.forEach(entry => {
+    todayEntries.forEach(entry => {
       const duration = entry.end_time - entry.start_time;
       const currentTotal = usageMap.get(entry.app_name) || 0;
       usageMap.set(entry.app_name, currentTotal + duration);
@@ -316,9 +329,10 @@ function App() {
   };
 
   const getCategoryUsage = (entries: TimeEntry[]): CategoryUsage[] => {
+    const todayEntries = getTodayEntries(entries);
     const usageMap = new Map<string, number>();
     
-    entries.forEach(entry => {
+    todayEntries.forEach(entry => {
       const duration = entry.end_time - entry.start_time;
       const category = categorizeApp(entry.app_name);
       const currentTotal = usageMap.get(category) || 0;
@@ -330,8 +344,10 @@ function App() {
       .sort((a, b) => b.totalDuration - a.totalDuration);
   };
 
-  // Layout the time entries to avoid overlap - only filter SageMode from timeline
-  const layoutEntries = layoutTimeEntries(timeEntries.filter(entry => entry.app_name.toLowerCase() !== 'sagemode'));
+  // Layout the time entries to avoid overlap - only filter SageMode and use today's entries
+  const layoutEntries = layoutTimeEntries(
+    getTodayEntries(timeEntries).filter(entry => entry.app_name.toLowerCase() !== 'sagemode')
+  );
 
   // Add color palette for pie chart
   const COLORS = [
@@ -383,7 +399,7 @@ function App() {
 
       <div className="main-content">
         <div className="process-list">
-          <h2>Daily App Usage</h2>
+          <h2>Today's App Usage</h2>
           <div className="process-grid">
             {getAggregatedAppUsage(timeEntries).map((app, index) => (
               <div key={index} className="process-card">
@@ -394,7 +410,7 @@ function App() {
               </div>
             ))}
           </div>
-          <h2 style={{ marginTop: '1rem' }}>Usage Distribution</h2>
+          <h2 style={{ marginTop: '1rem' }}>Today's Usage Distribution</h2>
           {/* Pie Charts Container */}
           <div className="pie-charts-container">
             {/* App Usage Pie Chart */}
@@ -409,7 +425,6 @@ function App() {
                     cy="50%"
                     outerRadius={70}
                     fill="#8884d8"
-                    // label={({ name }) => name.length > 10 ? name.slice(0, 10) + '…' : name}
                     isAnimationActive={false}
                   >
                     {getAggregatedAppUsage(timeEntries).map((_, idx) => (
@@ -435,7 +450,6 @@ function App() {
                     cy="50%"
                     outerRadius={70}
                     fill="#8884d8"
-                    // label={({ category }) => category}
                     isAnimationActive={false}
                   >
                     {getCategoryUsage(timeEntries).map((entry) => (
@@ -453,7 +467,7 @@ function App() {
         </div>
 
         <div className="calendar-view">
-          <h2>Daily Activity</h2>
+          <h2>Today's Activity</h2>
           <div className="timeline-container" ref={timelineContainerRef}>
             <div className="timeline" style={{ height: getTimelineHeight(), position: 'relative' }}>
               {generateHourMarkers()}
