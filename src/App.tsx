@@ -344,6 +344,26 @@ function App() {
       .sort((a, b) => b.totalDuration - a.totalDuration);
   };
 
+  // Move calculateXP inside App component - ensure it's defined after its dependencies
+  const calculateXP = (entries: TimeEntry[]): number => {
+    const todayEntries = getTodayEntries(entries);
+    let xp = 0;
+
+    todayEntries.forEach((entry: TimeEntry) => {
+      const duration = entry.end_time - entry.start_time; // seconds
+      const category = categorizeApp(entry.app_name);
+
+      const minutes = duration / 60;
+      if (category === 'Code') xp += minutes * 3;
+      else if (category === 'Productivity') xp += minutes * 2;
+      else xp += minutes * 1; // Optional fallback
+    });
+
+    return Math.floor(xp);
+  };
+
+  const xp = calculateXP(timeEntries); // Add XP calculation
+
   // Layout the time entries to avoid overlap - only filter SageMode and use today's entries
   const layoutEntries = layoutTimeEntries(
     getTodayEntries(timeEntries).filter(entry => entry.app_name.toLowerCase() !== 'sagemode')
@@ -393,6 +413,22 @@ function App() {
               />
             </div>
             <span>{memoryUsage.toFixed(1)}%</span>
+          </div>
+        </div>
+        <div className="tab-bar-right">
+          <div className="xp-bar">
+            <span>Chakra</span>
+            <div className="xp-progress">
+              <div
+                className="xp-progress-fill"
+                style={{ width: `${Math.min(xp % 100, 100)}%` }}
+              />
+            </div>
+            <span>{xp % 100}/100</span>
+          </div>
+          <div className="sage-level">
+            <span>Sage Level</span>
+            <span className="sage-level-value">{Math.floor(xp / 100)}</span>
           </div>
         </div>
       </div>
