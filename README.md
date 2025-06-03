@@ -2,7 +2,8 @@
 
 SageMode is a modern desktop application that helps you track and analyze your computer usage patterns. Built with React, TypeScript, and Tauri, it provides real-time insights into your application usage, helping you understand and optimize your digital habits.
 
-![Screenshot 2025-06-02 at 8 23 10 PM](https://github.com/user-attachments/assets/c40e1107-e6bf-45a5-a615-eb5632c9fe57)
+![Screenshot 2025-06-03 at 6 40 11 AM](https://github.com/user-attachments/assets/0e7968ba-0d09-4906-94be-f92bbd83efb2)
+
 
 ## Features
 
