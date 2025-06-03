@@ -346,17 +346,18 @@ function App() {
 
   // Move calculateXP inside App component - ensure it's defined after its dependencies
   const calculateXP = (entries: TimeEntry[]): number => {
-    const todayEntries = getTodayEntries(entries);
     let xp = 0;
 
-    todayEntries.forEach((entry: TimeEntry) => {
+    entries.forEach((entry: TimeEntry) => {
       const duration = entry.end_time - entry.start_time; // seconds
       const category = categorizeApp(entry.app_name);
 
       const minutes = duration / 60;
       if (category === 'Code') xp += minutes * 3;
       else if (category === 'Productivity') xp += minutes * 2;
-      else xp += minutes * 1; // Optional fallback
+      else if (category === 'Meetings') xp += minutes * 1.5;
+      else if (category === 'Explore') xp += minutes * 1;
+      else xp += minutes * 0.1;
     });
 
     return Math.floor(xp);
